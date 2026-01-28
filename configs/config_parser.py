@@ -1,9 +1,20 @@
 import sys
 from utils import errors
 
+
 def parser(file):
+    if file.endswith(".txt") is False and file.endswith(".conf") is False:
+        raise errors.ConfigsError("Error: invalid configuration file format (expected a .txt or .conf file)")
+
     def checker_convert(configs: dict):
-        keys = ["WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE", "PERFECT"]
+        keys = ["WIDTH",
+                "HEIGHT",
+                "ENTRY",
+                "EXIT",
+                "OUTPUT_FILE",
+                "PERFECT",
+                "SEED"
+                ]
         for key in keys:
             if key in configs:
                 if key in ["WIDTH", "HEIGHT"]:
@@ -20,9 +31,16 @@ def parser(file):
                         configs["PERFECT"] = False
                     else:
                         raise errors.ConfigsError(f'Error: \'{key}\' must be either "True" or "False" (case-sensitive)')
+                elif key == "SEED":
+                    if configs["SEED"] == "True":
+                        configs["SEED"] = True
+                    elif configs["SEED"] == "False":
+                        configs["SEED"] = False
+                    else:
+                        raise errors.ConfigsError(f'Error: \'{key}\' must be either "True" or "False" (case-sensitive)')
                 elif key == "OUTPUT_FILE":
                     if configs.get(key).endswith(".txt") is False:
-                        raise errors.ConfigsError("Error: invalid configuration file format (expected a .txt file)")
+                        raise errors.ConfigsError("Error: invalid output file format (expected a .txt file)")
                 elif key in ["ENTRY", "EXIT"]:
                     if "," in configs.get(key):
                         try:

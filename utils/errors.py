@@ -8,3 +8,4 @@ class InvalidDistinationFor42Path(Exception):
 
 class InvalidCoordinates(Exception):
     pass
+
